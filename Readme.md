@@ -1,5 +1,12 @@
 # Importing ChatGPT Conversations to Bear
-This repository contains a Python script for importing conversations from the export format. It also includes a Node.js server for handling the callback from the Bear application when a new note is created. The server appends the note information to the `bear_import_log.jsonl` file. The Python script reads from the `bear_import_log.jsonl` file to determine which conversations have already been imported. It then generates a URL for creating a note in Bear with the conversation's content. It uses the `generate_bear_url` function which creates a `bear://` URL that includes the conversation's details and a callback URL (`x-success`) pointing to the Node.js server. The script calls `create_note_in_bear` which uses the `open` subprocess to launch the URL scheme, causing the Bear app to create a new note. Once the note is created, the Bear app calls the `x-success` URL with details about the note. This action is handled by the `server.js` script running the Node.js server. `server.js` receives the success callback and appends the new note information to the `bear_import_log.jsonl` file. The Python script then writes an entry to the `bear_import_log.jsonl` file indicating that the conversation has been imported, to prevent re-importing in the future.
+This repository contains a simple Python script for importing conversations from openAI's chatGPT export format. It relies on the x-callback mechanism in the Bear app to create notes from the conversations. 
+
+The import is done in two steps. First, the Python script will generate a `bear://` URL for each conversation and open
+it in the Bear app. The standard browser is used to handle the callback from the Bear app. During the import the script
+will open a browser window for each conversation. The browser will call the Node.js server with the note information.
+The server will append the note information to the `bear_import_log.jsonl` file. The Python script will then write an
+entry to the `bear_import_log.jsonl` file indicating that the conversation has been imported, to prevent re-importing in
+the future.
 
 ## Requirements
 - macOS system
@@ -40,6 +47,9 @@ $ python3 chatgpt2bear.py --mode import --chat_export_path chat_export.json --im
  ```bash
 $ python3 chatgpt2bear.py --mode check_bear_notes_exist --import_log_path bear_import_log.jsonl --max_messages 3
 ```
+
+# Implementation
+This repository includes a Node.js server for handling the callback from the Bear application when a new note is created. The server appends the note information to the `bear_import_log.jsonl` file. The Python script reads from the `bear_import_log.jsonl` file to determine which conversations have already been imported. It then generates a URL for creating a note in Bear with the conversation's content. It uses the `generate_bear_url` function which creates a `bear://` URL that includes the conversation's details and a callback URL (`x-success`) pointing to the Node.js server. The script calls `create_note_in_bear` which uses the `open` subprocess to launch the URL scheme, causing the Bear app to create a new note. Once the note is created, the Bear app calls the `x-success` URL with details about the note. This action is handled by the `server.js` script running the Node.js server. `server.js` receives the success callback and appends the new note information to the `bear_import_log.jsonl` file. The Python script then writes an entry to the `bear_import_log.jsonl` file indicating that the conversation has been imported, to prevent re-importing in the future.
 
 # Data structures
 
