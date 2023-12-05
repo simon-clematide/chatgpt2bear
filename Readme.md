@@ -8,24 +8,34 @@ This repository contains a Python script for importing conversations from the ex
 
 ## Installation
 1. Clone this repository.
-2. Install the Python dependencies: `pip install -r requirements.txt`
-3. Install the Node.js dependencies: `npm install`
+2. Install the Node.js dependencies: `npm install`
 
 ## Usage
-1. Export your conversations from ChatGPT to a JSON file.
-2. Run the Python script with the path to the JSON file: `python chatgpt2bear.py --chat_export_path chat_export.json`
-3. The script will generate a `bear://` URL for each conversation and open it in the Bear app.
-4. The Bear app will call the Node.js server with the note information. The server will append the note information to the `bear_import_log.jsonl` file. The Python script will then write an entry to the `bear_import_log.jsonl` file indicating that the conversation has been imported, to prevent re-importing in the future.
+1. Export your conversations from ChatGPT via the web interface. And download the zip file that contains all files.
+   Unzip the archive and put `conversations.json` into the export directory.
+2. If you have the developer tools installed: `make import`
+3. Alternatively: Run the Python script with the path to the JSON file: `python chatgpt2bear.py --mode import --chat_export_path export/conversations.json`
+4. The script will generate a `bear://` URL for each conversation and open it in the Bear app.
+5. The Bear app will call the Node.js server with the note information. The server will append the note information to
+   the `bear_import_log.jsonl` file. The Python script will then write an entry to the `bear_import_log.jsonl` file
+   indicating that the conversation has been imported, to prevent re-importing in the future.
 
 ## Functionality and modes
- - **import mode**: The script reads from the `conversion_import.jsonl` file to determine which conversations have already been imported to the Bear application. If the file doesn't exist, it will be created. If a conversation has already been imported, it will be skipped. A conversation is considered imported if it has a corresponding entry in the `bear_import_log.jsonl` file and if the property 'exists_in_bear' is set to `true`. If `exists_in_bear` is `false`, the conversation will be re-imported.
+ - **import mode**: The script reads from the `conversion_import.jsonl` file to determine which conversations have
+   already been imported to the Bear application. If the file doesn't exist, it will be created. If a conversation has
+   already been imported, it will be skipped. A conversation is considered imported if it has a corresponding entry in
+   the `bear_import_log.jsonl` file and if the property 'exists_in_bear' is set to `true`. If `exists_in_bear` is
+   `false`, the conversation will be re-imported.
+
  ```bash
 $ python3 chatgpt2bear.py --mode import --chat_export_path chat_export.json --import_log_path bear_import_log.jsonl --max_messages 3
 ```
- - **check mode**: The script reads from the `conversion_import.jsonl` file to determine which conversations have already been imported to the Bear application. It then asks bear to open the note. If the note does not exist an error will be reported. After processing all conversations, the script will update `conversion_import.jsonl` file with the `exists_in_bear` property set to `true` for all conversations that exist in Bear. The next time an import is run, these conversations will be skipped.
+ - **check mode**: The script reads from the `conversion_import.jsonl` file to determine which conversations have
+   already been imported to the Bear application. It then asks bear to open the note. If the note does not exist an
+   error will be reported. After processing all conversations, the script will update `conversion_import.jsonl` file
+   with the `exists_in_bear` property set to `true` for all conversations that exist in Bear. The next time an import is
+   run, these conversations will be skipped.
  
- ```bash
-
  ```bash
 $ python3 chatgpt2bear.py --mode check_bear_notes_exist --import_log_path bear_import_log.jsonl --max_messages 3
 ```
