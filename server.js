@@ -19,7 +19,41 @@ app.get('/success', (req, res) => {
   };
   
   // Append to the JSONL file
-  fs.appendFileSync('conversation_import.jsonl', JSON.stringify(data) + '\n', { flag: 'a' });
+  fs.appendFileSync('bear_import_log.jsonl', JSON.stringify(data) + '\n', { flag: 'a' });
+  res.send('<script>window.close();</script>');
+});
+
+app.get('/bear-exists', (req, res) => {
+  const bearId = req.query.identifier;
+  let data = {
+    bear_id: bearId,
+    exists_in_bear: true,
+  };
+
+  // Append to the JSONL file
+  fs.appendFileSync('conversation_check.jsonl', JSON.stringify(data) + '\n', { flag: 'a' }); 
+
+
+  //res.send('<script>window.close();</script>');
+  //res.send(`Note with ID ${bearId} already exists in Bear. Please delete it and try again.`);  
+  res.send('<script>window.close();</script>');
+
+});
+app.get('/bear-missing', (req, res) => {
+  const bearId = req.query.identifier;
+  const conversation_id = req.query.conversation_id;
+  console.log(`Conversation_ID: ${conversation_id} bearId: ${bearId}`);
+  let data = {
+    bear_id: bearId,
+    conversation_id: conversation_id,
+    exists_in_bear: false,
+  };
+
+  // Append to the JSONL file
+  fs.appendFileSync('conversation_check.jsonl', JSON.stringify(data) + '\n', { flag: 'a' }); 
+
+  //res.send('<script>window.close();</script>');
+  //res.send(`Note with ID ${bearId} cannot be found in Bear. Please try again.`);
   res.send('<script>window.close();</script>');
 });
 
