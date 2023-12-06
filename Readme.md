@@ -8,6 +8,8 @@ The server will append the note information to the `bear_import_log.jsonl` file.
 entry to the `bear_import_log.jsonl` file indicating that the conversation has been imported, to prevent re-importing in
 the future.
 
+Note, this project was an experiment how current code AI assistants can help you code. I tried to use as much ChatGPT and CoPilot support to solve the problem. As a conclusion of my experience, I would say that I could use 50% of the code produced in the original form.
+
 ## Requirements
 - macOS system
 - Python 3.6+ 
@@ -51,7 +53,7 @@ $ python3 chatgpt2bear.py --mode check_bear_notes_exist --import_log_path bear_i
 # Implementation
 This repository includes a Node.js server for handling the callback from the Bear application when a new note is created. The server appends the note information to the `bear_import_log.jsonl` file. The Python script reads from the `bear_import_log.jsonl` file to determine which conversations have already been imported. It then generates a URL for creating a note in Bear with the conversation's content. It uses the `generate_bear_url` function which creates a `bear://` URL that includes the conversation's details and a callback URL (`x-success`) pointing to the Node.js server. The script calls `create_note_in_bear` which uses the `open` subprocess to launch the URL scheme, causing the Bear app to create a new note. Once the note is created, the Bear app calls the `x-success` URL with details about the note. This action is handled by the `server.js` script running the Node.js server. `server.js` receives the success callback and appends the new note information to the `bear_import_log.jsonl` file. The Python script then writes an entry to the `bear_import_log.jsonl` file indicating that the conversation has been imported, to prevent re-importing in the future.
 
-# Data structures
+# Data structures as analyzed by ChatGPT itself:-)
 
 The given data structure appears to be a JSON object representing a conversation or a series of interactions, likely within a messaging or task management system. Here's a breakdown of its components:
 
